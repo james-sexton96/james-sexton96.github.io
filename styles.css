@@ -1,0 +1,59 @@
+/* Set full-page background using the profile picture */
+body {
+    font-family: Arial, sans-serif;
+    background: url('assets/IMG_3681.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 50px;
+}
+
+/* Floating opaque container */
+.container {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 15px;
+    max-width: 500px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    position: relative;
+    right: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Centered text */
+h1 {
+    font-size: 24px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.bio {
+    font-size: 16px;
+    color: #555;
+    text-align: center;
+}
+
+/* Links section */
+.links {
+    width: 100%;
+    display: flex;
+    justify-content: space-around; /* Evenly distributes links */
+}
+
+.links a {
+    text-decoration: none;
+    color: #0073b1;
+    font-size: 18px;
+    padding: 10px;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    text-decoration: underline;
+    color: #005582;
+}
