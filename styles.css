@@ -1,7 +1,7 @@
 /* Set full-page background using the profile picture */
 body {
     font-family: Arial, sans-serif;
-    background: url('assets/IMG_3681.jpg') no-repeat center center fixed;
+    background: url('assets/IMG_3681.jpg') no-repeat left center;
     background-size: cover;
     height: 100vh;
     display: flex;
@@ -10,11 +10,21 @@ body {
     padding: 50px;
 }
 
+/* Ensure the background image focuses on your body on mobile */
+@media (max-width: 768px) {
+    body {
+        background-position: left center;
+        background-size: cover; /* Keeps your body in frame */
+        background-attachment: fixed; /* Ensures consistency */
+    }
+}
+
 /* Floating opaque container */
 .container {
-    background: rgba(255, 255, 255, 0.5);
-    padding: 15px;
-    max-width: 500px;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 20px;
+    max-width: 400px;
+    min-width: 275px;
     border-radius: 15px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
     position: relative;
@@ -23,37 +33,79 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 15px;
-}
-
-/* Centered text */
-h1 {
-    font-size: 24px;
-    margin-top: 10px;
     text-align: center;
 }
 
+/* Adjust container for mobile */
+@media (max-width: 768px) {
+    .container {
+        max-width: 80%;
+        padding: 15px;
+        right: 0; /* Center it */
+    }
+}
+
+/* Title */
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "JetBrains Mono", monospace;
+    margin-top: 10px;
+}
+
+/* Bio */
 .bio {
     font-size: 16px;
     color: #555;
-    text-align: center;
 }
 
 /* Links section */
 .links {
     width: 100%;
     display: flex;
-    justify-content: space-around; /* Evenly distributes links */
+    flex-direction: column;
+    align-items: stretch; /* Ensures buttons stretch to max width */
+    gap: 10px; /* Space between buttons */
 }
 
-.links a {
-    text-decoration: none;
-    color: #0073b1;
-    font-size: 18px;
-    padding: 10px;
-    transition: color 0.3s ease;
+/* Button Styling */
+.button-30 {
+  align-items: center;
+  appearance: none;
+  background-color: #FCFCFD;
+  border-radius: 4px;
+  border-width: 0;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+  box-sizing: border-box;
+  color: #36395A;
+  cursor: pointer;
+  display: flex; /* Makes text and button content aligned */
+  justify-content: center;
+  font-family: "JetBrains Mono", monospace;
+  height: 48px;
+  padding: 0 16px;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .15s, transform .15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow,transform;
+  font-size: 18px;
+  width: 100%; /* Ensures all buttons match the widest one */
 }
 
-.links a:hover {
-    text-decoration: underline;
-    color: #005582;
+.button-30:focus {
+  box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+}
+
+.button-30:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.button-30:active {
+  box-shadow: #D6D6E7 0 3px 7px inset;
+  transform: translateY(2px);
 }
