@@ -1,0 +1,66 @@
+# .github/workflows/deploy.yml
+
+# Name of the workflow
+name: Deploy Next.js Site to GitHub Pages
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events but only for the main branch
+  push:
+    branches: [ "main" ] # Adjust if your main branch has a different name (e.g., master)
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+# Define the jobs that will run as part of the workflow
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+    steps:
+      - name: Checkout repository # Checks-out your repository under $GITHUB_WORKSPACE
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js # Sets up a Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Specify the Node.js version matching your project (e.g., 18.x, 20.x)
+          cache: 'npm' # Enable caching for npm dependencies
+
+      - name: Install dependencies # Installs project dependencies using npm ci (clean install)
+        run: npm ci
+
+      - name: Build Next.js site # Runs the build script defined in package.json
+        run: npm run build
+        # Note: Ensure your next.config.js has `output: 'export'`
+
+      - name: Upload artifact # Uploads the build output ('out' directory) as a Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload the 'out' directory created by `next export` (via `npm run build`)
+          path: './out'
+
+  # Deployment job
+  deploy:
+    needs: build # This job depends on the 'build' job completing successfully
+    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+    environment:
+      name: github-pages # Specify the deployment environment
+      url: ${{ steps.deployment.outputs.page_url }} # Output the deployed URL
+
+    steps:
+      - name: Deploy to GitHub Pages # Deploys the artifact to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # Uses the official GitHub Action for deployment
