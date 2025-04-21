@@ -34,7 +34,7 @@ const App = () => {
     links: [
       {
         name: 'Google Scholar',
-        url: 'https://scholar.google.com/citations?user=3Z64U10AAAAJ&hl=en&authuser=1',
+        url: 'https://scholar.google.com/citations?user=3Z64U10AAAAJ',
         icon: GraduationCap,
         bgColor: 'bg-green-600',
         hoverColor: 'hover:bg-green-700',
