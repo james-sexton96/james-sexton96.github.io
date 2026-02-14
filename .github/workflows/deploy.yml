@@ -26,41 +26,32 @@ concurrency:
 
 # Define the jobs that will run as part of the workflow
 jobs:
-  # Build job
   build:
-    runs-on: ubuntu-latest # Use the latest Ubuntu runner
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository # Checks-out your repository under $GITHUB_WORKSPACE
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js # Sets up a Node.js environment
+      # 1. Install pnpm first
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10 # Or specify your version, e.g., 8.x.x
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Specify the Node.js version matching your project (e.g., 18.x, 20.x)
-          cache: 'npm' # Enable caching for npm dependencies
+          node-version: '20'
+          cache: 'pnpm' # Now this will work correctly
 
-      - name: Install dependencies # Installs project dependencies using npm ci (clean install)
-        run: npm ci
+      # 2. Use frozen-lockfile for CI environments
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: Build Next.js site # Runs the build script defined in package.json
-        run: npm run build
-        # Note: Ensure your next.config.js has `output: 'export'`
+      - name: Build Next.js site
+        run: pnpm run build
 
-      - name: Upload artifact # Uploads the build output ('out' directory) as a Pages artifact
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload the 'out' directory created by `next export` (via `npm run build`)
           path: './out'
-
-  # Deployment job
-  deploy:
-    needs: build # This job depends on the 'build' job completing successfully
-    runs-on: ubuntu-latest # Use the latest Ubuntu runner
-    environment:
-      name: github-pages # Specify the deployment environment
-      url: ${{ steps.deployment.outputs.page_url }} # Output the deployed URL
-
-    steps:
-      - name: Deploy to GitHub Pages # Deploys the artifact to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4 # Uses the official GitHub Action for deployment
