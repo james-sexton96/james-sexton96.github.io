@@ -1,5 +1,3 @@
-# .github/workflows/deploy.yml
-
 # Name of the workflow
 name: Deploy Next.js Site to GitHub Pages
 
@@ -7,7 +5,7 @@ name: Deploy Next.js Site to GitHub Pages
 on:
   # Triggers the workflow on push events but only for the main branch
   push:
-    branches: [ "main" ] # Adjust if your main branch has a different name (e.g., master)
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -19,39 +17,61 @@ permissions:
   id-token: write
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 # Define the jobs that will run as part of the workflow
 jobs:
+  # Build job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 1. Install pnpm first
+      # 1. Install pnpm package manager
+      # We use the official pnpm action to ensure the correct version is available
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 10 # Or specify your version, e.g., 8.x.x
+          version: 9 # You can pin a specific version here, or use 'latest'
 
+      # 2. Setup Node.js
+      # Note: We set cache to 'pnpm'. This works automatically because pnpm was setup in the previous step.
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm' # Now this will work correctly
+          cache: 'pnpm'
 
-      # 2. Use frozen-lockfile for CI environments
+      # 3. Install dependencies
+      # --frozen-lockfile is the pnpm equivalent of npm ci (ensures lockfile isn't modified)
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # 4. Build Next.js site
       - name: Build Next.js site
-        run: pnpm run build
+        run: pnpm build
+        # Important: Ensure your next.config.mjs has:
+        # output: 'export'
+        # images: { unoptimized: true } (unless using a specific loader)
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
+          # Upload the 'out' directory created by Next.js static export
           path: './out'
+
+  # Deployment job
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
