@@ -1,49 +1,36 @@
-import { Github, Linkedin, GraduationCap } from "lucide-react";
-import { UserData, Publication } from "../types";
+import type { Publication, WorkItem } from "../types";
 
-// User Data
-export const userData: UserData = {
+export const SITE = {
   name: "James Sexton",
-  profilePicture: "/IMG_3681.jpg", // Default/Desktop background
-  mobileProfilePicture: "/mobile_background.jpg", // Mobile background
-  brainGif: "/brain_activation2.gif", // Path in public folder
-  links: [
-    {
-      name: "Google Scholar",
-      url: "https://scholar.google.com/citations?user=3Z64U10AAAAJ",
-      icon: GraduationCap,
-      bgColor: "bg-green-600",
-      hoverColor: "hover:bg-green-700",
-      focusRing: "focus:ring-green-400",
-    },
-    {
-      name: "LinkedIn",
-      url: "https://www.linkedin.com/in/jamesdsexton/",
-      icon: Linkedin,
-      bgColor: "bg-blue-700",
-      hoverColor: "hover:bg-blue-800",
-      focusRing: "focus:ring-blue-400",
-    },
-    {
-      name: "GitHub",
-      url: "https://github.com/james-sexton96",
-      icon: Github,
-      bgColor: "bg-gray-800",
-      hoverColor: "hover:bg-gray-900",
-      focusRing: "focus:ring-gray-400",
-    },
-  ],
+  fullName: "James D. Sexton",
+  location: "Brooklyn, NY",
+  tagline:
+    "Data Scientist and Commercial Leader in the Pharmaceutical Industry",
+  domain: "jamesdsexton.com",
+  links: {
+    scholar: "https://scholar.google.com/citations?user=3Z64U10AAAAJ",
+    linkedin: "https://www.linkedin.com/in/jamesdsexton/",
+    github: "https://github.com/james-sexton96",
+  },
+  portrait: "/james-backpack.jpg", // swap for a tighter headshot if you have one
 };
 
-// Publication Data
-export const actualPublications: Publication[] = [
+export const workHistory: WorkItem[] = [
+  { id: 1, period: "Now",         org: "Compass Pathways",                       role: "Commercial Analytics" },
+  { id: 2, period: "2022 — 2026", org: "Otsuka Precision Health",                role: "Data Scientist" },
+  { id: 3, period: "2021 — 2022", org: "Eleusis Therapeutics (now AtaiBeckley)", role: "Data Scientist" },
+  { id: 4, period: "2020 — 2022", org: "Imperial College London",                role: "Research" },
+  { id: 5, period: "2017 — 2020", org: "University of Alabama at Birmingham",    role: "Research" },
+];
+
+export const publications: Publication[] = [
   {
-    id: 1, // Unique ID
+    id: 1,
     title:
       "Increased global integration in the brain after psilocybin therapy for depression",
     authors:
       "Richard E Daws, Christopher Timmermann, Bruna Giribaldi, James D Sexton, Matthew B Wall, David Erritzoe, Leor Roseman, David Nutt, Robin Carhart-Harris",
-    journal: "Nature medicine",
+    journal: "Nature Medicine",
     volume: 28,
     issue: 4,
     pages: "844-851",
@@ -67,7 +54,7 @@ export const actualPublications: Publication[] = [
     title:
       "Population survey data informing the therapeutic potential of classic and novel phenethylamine, tryptamine, and lysergamide psychedelics",
     authors: "James D Sexton, Charles D Nichols, Peter S Hendricks",
-    journal: "Frontiers in psychiatry",
+    journal: "Frontiers in Psychiatry",
     volume: 10,
     pages: "896",
     year: 2020,
@@ -79,11 +66,11 @@ export const actualPublications: Publication[] = [
       "Prevalence and epidemiological associates of novel psychedelic use in the United States adult population",
     authors:
       "James D Sexton, Michael S Crawford, Noah W Sweat, Allyson Varley, Emma E Green, Peter S Hendricks",
-    journal: "Journal of psychopharmacology",
+    journal: "Journal of Psychopharmacology",
     volume: 33,
     issue: 9,
     pages: "1058-1067",
     year: 2019,
     link: "https://journals.sagepub.com/doi/abs/10.1177/0269881119827796",
   },
-]; 
+];

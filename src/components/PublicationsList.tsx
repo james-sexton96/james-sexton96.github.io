@@ -1,115 +1,96 @@
 import React from "react";
-import { Roboto_Mono } from "next/font/google";
-import { PublicationsListProps } from "../types";
+import type { PublicationsListProps } from "../types";
+import { SITE } from "../data";
 
-// Load the Roboto Mono font with desired subsets and weights
-const robotoMono = Roboto_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"], // Load regular and bold weights
-});
+const labelKicker =
+  "font-mono text-[11px] uppercase tracking-[0.18em] text-muted";
 
-const PublicationsList: React.FC<PublicationsListProps> = ({
-  publications,
-}) => {
-  // Helper function to abbreviate a single name
-  const abbreviateName = (fullName: string): string => {
-    const nameParts = fullName.trim().split(/\s+/);
-    if (nameParts.length < 2) return fullName;
-    const lastName = nameParts.pop() || "";
-    const initials = nameParts
-      .map((part) => `${part.charAt(0).toUpperCase()}.`)
-      .join(" ");
-    return `${initials} ${lastName}`;
-  };
-
-  // Function to render authors with abbreviation and bolding
-  const renderAuthors = (authors: string, nameToBold: string) => {
-    const abbreviatedNameToBold = abbreviateName(nameToBold);
-    const abbreviatedAuthors = authors
-      .split(",")
-      .map((author) => abbreviateName(author.trim()))
-      .join(", ");
-
-    const parts = abbreviatedAuthors.split(abbreviatedNameToBold);
-    if (parts.length <= 1) return abbreviatedAuthors;
-
-    return parts.map((part, index) => (
-      <React.Fragment key={index}>
-        {part}
-        {index < parts.length - 1 && <strong>{abbreviatedNameToBold}</strong>}
-      </React.Fragment>
-    ));
-  };
-
-  return (
-    <div className="w-full text-center">
-      <h2
-        className={`text-4xl sm:text-5xl font-bold text-white mb-12 ${robotoMono.className}`}
-      >
-        Latest Publications
-      </h2>
-      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 sm:p-8 shadow-2xl text-left">
-        {publications && publications.length > 0 ? (
-          <ul className="space-y-4">
-            {publications.map((pub) => {
-              let journalDetails = pub.journal;
-              if (pub.volume) journalDetails += ` ${pub.volume}`;
-              if (pub.issue) journalDetails += ` (${pub.issue})`;
-              if (pub.pages) journalDetails += `, ${pub.pages}`;
-
-              return (
-                <li
-                  key={pub.id}
-                  className="border-b border-white/10 pb-3 last:border-b-0"
-                >
-                  <h3 className="text-lg font-semibold text-gray-100 hover:text-white transition duration-200">
-                    <a
-                      href={pub.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:underline"
-                    >
-                      {pub.title}
-                    </a>
-                  </h3>
-                  <p className="text-sm text-gray-200 mt-1">
-                    {renderAuthors(pub.authors, "James D Sexton")}
-                  </p>
-                  <p className="text-sm text-gray-300">
-                    {journalDetails}, {pub.year}
-                  </p>
-                </li>
-              );
-            })}
-          </ul>
-        ) : (
-          <p className="text-center text-gray-400">No publications found.</p>
-        )}
-      </div>
-      {/* CSS for custom scrollbar */}
-      <style jsx global>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: rgba(55, 65, 81, 0.5);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: rgba(107, 114, 128, 0.7);
-          border-radius: 10px;
-          border: 2px solid rgba(55, 65, 81, 0.5);
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background-color: rgba(156, 163, 175, 0.8);
-        }
-        .custom-scrollbar {
-          scrollbar-width: thin;
-          scrollbar-color: rgba(107, 114, 128, 0.7) rgba(55, 65, 81, 0.5);
-        }
-      `}</style>
-    </div>
-  );
+// Abbreviate "James D Sexton" → "J. D. Sexton" so a single name reads compactly.
+const abbreviateName = (fullName: string): string => {
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length < 2) return fullName;
+  const last = parts.pop() as string;
+  const initials = parts.map((p) => `${p.charAt(0).toUpperCase()}.`).join(" ");
+  return `${initials} ${last}`;
 };
 
-export default PublicationsList; 
+const renderAuthors = (authors: string, nameToBold: string) => {
+  const abbrBold = abbreviateName(nameToBold);
+  const abbreviated = authors
+    .split(",")
+    .map((a) => abbreviateName(a.trim()))
+    .join(", ");
+  const segments = abbreviated.split(abbrBold);
+  if (segments.length <= 1) return abbreviated;
+  return segments.map((seg, i) => (
+    <React.Fragment key={i}>
+      {seg}
+      {i < segments.length - 1 && (
+        <strong className="font-semibold text-ink">{abbrBold}</strong>
+      )}
+    </React.Fragment>
+  ));
+};
+
+const PublicationsList = ({ publications }: PublicationsListProps) => (
+  <section
+    id="pubs"
+    className="mx-auto max-w-[1080px] px-[max(1.5rem,5vw)] py-[80px] sm:py-[112px]"
+  >
+    <div className="mb-12 grid grid-cols-1 items-baseline gap-6 md:grid-cols-[220px_1fr] md:gap-16">
+      <div className={labelKicker}>03 — Publications</div>
+      <div className="flex flex-wrap items-baseline justify-between gap-4">
+        <h2 className="m-0 text-[40px] font-medium leading-[1.05] tracking-[-0.025em] text-ink">
+          Selected work
+        </h2>
+        <a
+          href={SITE.links.scholar}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-[13px] text-accent no-underline hover:underline"
+        >
+          All on Google Scholar <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <ol className="m-0 list-none p-0">
+      {publications.map((p) => {
+        let meta = "";
+        if (p.volume) meta += `${p.volume}`;
+        if (p.issue) meta += `(${p.issue})`;
+        if (p.pages) meta += `${meta ? ", " : ""}${p.pages}`;
+
+        return (
+          <li
+            key={p.id}
+            className="grid grid-cols-1 items-baseline gap-4 border-t border-rule py-7 md:grid-cols-[100px_1fr_200px] md:gap-16"
+          >
+            <div className="font-mono text-[13px] text-accent">{p.year}</div>
+            <div>
+              <a
+                href={p.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="no-underline"
+              >
+                <h3 className="m-0 mb-3 text-[20px] font-medium leading-[1.3] tracking-[-0.01em] text-ink text-pretty transition-colors hover:text-accent">
+                  {p.title}
+                </h3>
+              </a>
+              <p className="m-0 text-[13px] leading-[1.55] text-body">
+                {renderAuthors(p.authors, "James D Sexton")}
+              </p>
+            </div>
+            <div className="text-[12px] text-muted md:text-right">
+              <div className="text-[13px] text-ink">{p.journal}</div>
+              {meta && <div className="mt-1 font-mono">{meta}</div>}
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+  </section>
+);
+
+export default PublicationsList;
