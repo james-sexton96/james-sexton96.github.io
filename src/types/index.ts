@@ -1,36 +1,26 @@
-// Type Definition for Publication
 export interface Publication {
-  id: number; // Use a unique ID for React keys
+  id: number;
   title: string;
   authors: string;
-  journal: string; // Can be journal name or conference name
+  journal: string;
   year: number;
-  link?: string; // Link is now populated for most items
-  volume?: string | number; // Add optional volume
-  issue?: string | number; // Add optional issue
-  pages?: string; // Add optional pages
+  link?: string;
+  volume?: string | number;
+  issue?: string | number;
+  pages?: string;
 }
 
-// Type Definition for User Data
-export interface UserData {
-  name: string;
-  profilePicture: string;
-  mobileProfilePicture: string;
-  brainGif: string;
-  links: SocialLink[];
+export interface WorkItem {
+  id: number;
+  period: string;
+  org: string;
+  role: string;
 }
 
-// Type Definition for Social Links
-export interface SocialLink {
-  name: string;
-  url: string;
-  icon: React.ComponentType<{ className?: string; "aria-hidden"?: boolean }>;
-  bgColor: string;
-  hoverColor: string;
-  focusRing: string;
-}
-
-// Props Type for PublicationsList
 export interface PublicationsListProps {
   publications: Publication[];
-} 
+}
+
+export interface WorkHistoryProps {
+  items: WorkItem[];
+}
