@@ -31,7 +31,6 @@ jobs:
         uses: actions/checkout@v4
 
       # 1. Install pnpm package manager
-      # No version specified here; it will automatically use pnpm@10.29.3 from your package.json
       - name: Install pnpm
         uses: pnpm/action-setup@v4
 
@@ -39,7 +38,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'pnpm'
 
       # 3. Install dependencies
